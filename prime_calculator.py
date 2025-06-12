@@ -1,5 +1,3 @@
-import sys
-
 def is_prime(n):
     if n <= 1:
         return False
@@ -9,17 +7,15 @@ def is_prime(n):
     return True
 
 def list_primes(up_to):
-    print(f"Prime numbers up to {up_to}:")
+    print(f"\nPrime numbers up to {up_to}:")
     for num in range(2, up_to + 1):
         if is_prime(num):
             print(num)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 prime_calculator.py <upper_limit>")
-    else:
-        try:
-            limit = int(sys.argv[1])
-            list_primes(limit)
-        except ValueError:
-            print("Please provide a valid integer.")
+    try:
+        limit = int(input("Enter an upper limit to find prime numbers: "))
+        list_primes(limit)
+    except ValueError:
+        print("❌ Please enter a valid integer.")
+
