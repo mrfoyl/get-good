@@ -1,21 +1,26 @@
-# get-good
-# Prime Number Calculator 🧮
+# Prime Calculator
 
-This is a simple Python script that calculates prime numbers up to a specified limit. It's intended for testing, learning, or basic number theory experimentation.
+A fast, parallelized prime number calculator written in Python.  
+Supports multicore CPU processing, a live progress bar, and calculation timing.
 
-## 📂 Files
+---
 
-- `prime_calculator.py` – The main Python script that checks for prime numbers.
+## 🚀 Features
 
-## 🚀 Getting Started
+- ✅ Calculates all prime numbers up to a user-defined limit
+- ⚡ Uses all available CPU cores with Python `multiprocessing`
+- 📊 Shows progress bar with percentage and estimated time using `tqdm`
+- ⏱️ Displays total calculation time
 
-### Requirements
+---
 
-- Python 3.6 or later
+## 🖥️ Requirements
 
-### Running the script
+- Python 3.6+
+- `tqdm` (for progress bar)
 
-You can run the script with a desired upper limit for prime number calculation:
+### On Debian/Ubuntu:
 
 ```bash
-python3 prime_calculator.py 100
+sudo apt update
+sudo apt install python3 python3-tqdm
