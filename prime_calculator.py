@@ -1,38 +1,43 @@
+import time
 import multiprocessing
+from tqdm import tqdm
 
 def is_prime(n):
-    if n <= 1:
+    if n <= 3:
+        return n > 1
+    if n % 2 == 0 or n % 3 == 0:
         return False
-    for i in range(2, int(n**0.5) + 1):
-        if n % i == 0:
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
             return False
+        i += 6
     return True
 
-def check_range(start_end):
-    start, end = start_end
-    primes = []
-    for num in range(start, end):
-        if is_prime(num):
-            primes.append(num)
-    return primes
+def check_range(start, end):
+    return [num for num in range(start, end) if is_prime(num)]
+
+# ✅ This is the fix — top-level function instead of lambda
+def process_range(args):
+    return check_range(*args)
 
 def list_primes_parallel(up_to):
     cpu_count = multiprocessing.cpu_count()
-    print(f"Using {cpu_count} CPU cores")
+    print(f"\nUsing {cpu_count} CPU cores to calculate primes up to {up_to}...")
 
-    # Split the range [2..up_to+1) into chunks for each CPU core
-    chunk_size = (up_to // cpu_count) + 1
+    chunk_size = max(10_000, up_to // (cpu_count * 4))
     ranges = [(i, min(i + chunk_size, up_to + 1)) for i in range(2, up_to + 1, chunk_size)]
 
+    start_time = time.time()
+
+    primes = []
     with multiprocessing.Pool(cpu_count) as pool:
-        results = pool.map(check_range, ranges)
+        for result in tqdm(pool.imap_unordered(process_range, ranges), total=len(ranges), desc="Processing", unit="chunk"):
+            primes.extend(result)
 
-    # Flatten the list of primes from all chunks
-    primes = [prime for sublist in results for prime in sublist]
-
-    print(f"\nPrime numbers up to {up_to}:")
-    for prime in sorted(primes):
-        print(prime)
+    elapsed = time.time() - start_time
+    print(f"\n✅ Found {len(primes)} prime numbers up to {up_to}.")
+    print(f"⏱️ Calculation took {elapsed:.2f} seconds.")
 
 if __name__ == "__main__":
     try:
